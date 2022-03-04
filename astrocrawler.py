@@ -3,23 +3,27 @@ from bs4 import BeautifulSoup
 import json
 
 def request():
-  response = urlopen('https://astrojourney.com.br/' + str('blog/'))
+  response = urlopen('https://astrojourney.com.br/blog/')
   html = response.read().decode('utf-8')
   soup = BeautifulSoup(html, 'html.parser')
   return soup
 
-def extract_data(soup):
+def extract_links(soup):
   titulos = soup.select("article div h5 a")
   lista_links = []
   for link in titulos:
       lista_links.append(link.get('href'))
+  return lista_links
 
+def request_html_from_links(lista_links):
   lista_html = []
   for item in lista_links: 
       response = urlopen(item)
       html = response.read().decode('utf-8')
       lista_html.append(html)
+  return lista_html
 
+def extract_data(lista_html):
   lista_titulos = []
   for html in lista_html: 
       soup = BeautifulSoup(html, 'html.parser')
@@ -38,6 +42,8 @@ def extract_data(soup):
 
 if __name__ == '__main__':
   soup = request()
-  dicionario = extract_data(soup)
+  lista_links = extract_links(soup)
+  lista_html = request_html_from_links(lista_links)
+  dicionario = extract_data(lista_html)
   with open('Posts.json', 'w') as f:
     json.dump(dicionario, f, ensure_ascii=False, indent=4)

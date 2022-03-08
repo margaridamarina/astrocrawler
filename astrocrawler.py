@@ -35,10 +35,10 @@ def extract_data(lista_html):
   for html in lista_html: 
       soup = BeautifulSoup(html, 'html.parser')
       conteudo = soup.find("div", {"class": "post_text_inner"})
-      lista_conteudo.append(conteudo.get_text().replace('\n', '').replace('\t', '').strip())
-
+      # lista_conteudo.append(conteudo.get_text().replace('\n', '').replace('\t', '').strip()) 
+      lista_conteudo.append(conteudo.get_text().strip())
   dicionario = dict(zip(lista_titulos, lista_conteudo))
-  return dicionario  
+  return dicionario
 
 if __name__ == '__main__':
   soup = request()
